@@ -7,7 +7,10 @@
     "start": "electron .",
     "rebuild": "electron-rebuild",
     "postinstall": "electron-rebuild",
-    "dist": "electron-builder --mac"
+    "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win",
+    "dist:all": "electron-builder --mac --win"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.74.0",
@@ -25,8 +28,30 @@
     "productName": "DontbeTerm",
     "mac": {
       "category": "public.app-category.developer-tools",
-      "target": "dmg",
-      "icon": "build/icon.icns"
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "build/icon.icns",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "${productName}-${version}-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
     },
     "files": [
       "main.js",
