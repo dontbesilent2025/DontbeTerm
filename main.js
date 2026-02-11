@@ -168,17 +168,6 @@ ipcMain.handle('topic:refresh', async () => {
   }
 });
 
-// --- IPC: Settings ---
-
-ipcMain.handle('settings:get', () => {
-  return topicDetector.getConfig();
-});
-
-ipcMain.handle('settings:save', (event, { apiKey, baseUrl }) => {
-  topicDetector.configure(apiKey, baseUrl);
-  return { success: true };
-});
-
 // --- Menu & Shortcuts ---
 
 function buildMenu() {

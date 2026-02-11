@@ -11,11 +11,127 @@
 <body>
   <!-- Toolbar -->
   <div id="toolbar">
-    <button id="btn-refresh">刷新主题</button>
+    <button id="btn-refresh">自动命名标签页</button>
     <button id="btn-copy-logs" title="复制调试日志">复制日志</button>
+    <div class="claude-commands-wrapper">
+      <button id="btn-claude-commands" title="Claude 快捷命令">Claude 命令 ▾</button>
+      <div id="claude-commands-menu" class="commands-menu hidden">
+        <div class="commands-menu-item" data-command="/help">
+          <div class="command-name">/help</div>
+          <div class="command-desc">获取使用帮助</div>
+        </div>
+        <div class="commands-menu-item" data-command="/exit">
+          <div class="command-name">/exit</div>
+          <div class="command-desc">退出 REPL</div>
+        </div>
+        <div class="commands-menu-item" data-command="/clear">
+          <div class="command-name">/clear</div>
+          <div class="command-desc">清除对话历史</div>
+        </div>
+        <div class="commands-menu-item" data-command="/compact">
+          <div class="command-name">/compact</div>
+          <div class="command-desc">压缩对话</div>
+        </div>
+        <div class="commands-menu-item" data-command="/resume">
+          <div class="command-name">/resume</div>
+          <div class="command-desc">恢复对话</div>
+        </div>
+        <div class="commands-menu-item" data-command="/rename">
+          <div class="command-name">/rename</div>
+          <div class="command-desc">重命名当前会话</div>
+        </div>
+        <div class="commands-menu-item" data-command="/rewind">
+          <div class="command-name">/rewind</div>
+          <div class="command-desc">回退对话和代码</div>
+        </div>
+        <div class="commands-menu-item" data-command="/export">
+          <div class="command-name">/export</div>
+          <div class="command-desc">导出对话</div>
+        </div>
+        <div class="commands-menu-item" data-command="/copy">
+          <div class="command-name">/copy</div>
+          <div class="command-desc">复制最后回复</div>
+        </div>
+        <div class="commands-menu-item" data-command="/config">
+          <div class="command-name">/config</div>
+          <div class="command-desc">打开设置界面</div>
+        </div>
+        <div class="commands-menu-item" data-command="/status">
+          <div class="command-name">/status</div>
+          <div class="command-desc">查看状态信息</div>
+        </div>
+        <div class="commands-menu-item" data-command="/model">
+          <div class="command-name">/model</div>
+          <div class="command-desc">切换 AI 模型</div>
+        </div>
+        <div class="commands-menu-item" data-command="/theme">
+          <div class="command-name">/theme</div>
+          <div class="command-desc">更改颜色主题</div>
+        </div>
+        <div class="commands-menu-item" data-command="/statusline">
+          <div class="command-name">/statusline</div>
+          <div class="command-desc">设置状态栏</div>
+        </div>
+        <div class="commands-menu-item" data-command="/permissions">
+          <div class="command-name">/permissions</div>
+          <div class="command-desc">管理权限</div>
+        </div>
+        <div class="commands-menu-item" data-command="/usage">
+          <div class="command-name">/usage</div>
+          <div class="command-desc">查看使用限制</div>
+        </div>
+        <div class="commands-menu-item" data-command="/cost">
+          <div class="command-name">/cost</div>
+          <div class="command-desc">查看 token 统计</div>
+        </div>
+        <div class="commands-menu-item" data-command="/context">
+          <div class="command-name">/context</div>
+          <div class="command-desc">可视化上下文</div>
+        </div>
+        <div class="commands-menu-item" data-command="/stats">
+          <div class="command-name">/stats</div>
+          <div class="command-desc">查看使用统计</div>
+        </div>
+        <div class="commands-menu-item" data-command="/debug">
+          <div class="command-name">/debug</div>
+          <div class="command-desc">排查问题</div>
+        </div>
+        <div class="commands-menu-item" data-command="/doctor">
+          <div class="command-name">/doctor</div>
+          <div class="command-desc">检查安装健康</div>
+        </div>
+        <div class="commands-menu-item" data-command="/init">
+          <div class="command-name">/init</div>
+          <div class="command-desc">初始化项目</div>
+        </div>
+        <div class="commands-menu-item" data-command="/memory">
+          <div class="command-name">/memory</div>
+          <div class="command-desc">编辑内存文件</div>
+        </div>
+        <div class="commands-menu-item" data-command="/mcp">
+          <div class="command-name">/mcp</div>
+          <div class="command-desc">管理 MCP 服务器</div>
+        </div>
+        <div class="commands-menu-item" data-command="/tasks">
+          <div class="command-name">/tasks</div>
+          <div class="command-desc">管理后台任务</div>
+        </div>
+        <div class="commands-menu-item" data-command="/todos">
+          <div class="command-name">/todos</div>
+          <div class="command-desc">列出 TODO 项目</div>
+        </div>
+        <div class="commands-menu-item" data-command="/plan">
+          <div class="command-name">/plan</div>
+          <div class="command-desc">进入计划模式</div>
+        </div>
+        <div class="commands-menu-item" data-command="/teleport">
+          <div class="command-name">/teleport</div>
+          <div class="command-desc">恢复远程会话</div>
+        </div>
+      </div>
+    </div>
     <div id="toolbar-spacer"></div>
     <button id="btn-theme" title="切换日间/夜间模式">日间模式</button>
-    <button id="btn-settings" title="API 设置">设置</button>
   </div>
 
   <!-- Tab Bar -->
@@ -29,21 +145,6 @@
 
   <!-- Scroll to Bottom Button -->
   <button id="btn-scroll-bottom" class="scroll-bottom-btn" title="滚动到底部">↓</button>
-
-  <!-- Settings Modal -->
-  <div id="settings-modal" class="modal hidden">
-    <div class="modal-content">
-      <h3>API 设置</h3>
-      <label class="modal-label">Base URL</label>
-      <input type="text" id="settings-base-url" placeholder="https://api.anthropic.com">
-      <label class="modal-label">API Key</label>
-      <input type="password" id="settings-api-key" placeholder="sk-...">
-      <div class="modal-buttons">
-        <button id="btn-settings-save">保存</button>
-        <button id="btn-settings-cancel" class="btn-secondary">取消</button>
-      </div>
-    </div>
-  </div>
 
   <script src="../node_modules/xterm/lib/xterm.js"></script>
   <script src="../node_modules/xterm-addon-fit/lib/xterm-addon-fit.js"></script>

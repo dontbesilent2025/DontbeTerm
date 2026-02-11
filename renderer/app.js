@@ -75,14 +75,10 @@ const btnAddClaude = document.getElementById('btn-add-claude');
 const terminalContainer = document.getElementById('terminal-container');
 const btnRefresh = document.getElementById('btn-refresh');
 const btnCopyLogs = document.getElementById('btn-copy-logs');
+const btnClaudeCommands = document.getElementById('btn-claude-commands');
+const claudeCommandsMenu = document.getElementById('claude-commands-menu');
 const btnTheme = document.getElementById('btn-theme');
-const btnSettings = document.getElementById('btn-settings');
 const btnScrollBottom = document.getElementById('btn-scroll-bottom');
-const settingsModal = document.getElementById('settings-modal');
-const settingsBaseUrl = document.getElementById('settings-base-url');
-const settingsApiKey = document.getElementById('settings-api-key');
-const btnSettingsSave = document.getElementById('btn-settings-save');
-const btnSettingsCancel = document.getElementById('btn-settings-cancel');
 
 // --- Tab Management ---
 
@@ -342,28 +338,34 @@ Language: ${navigator.language}
   });
 }
 
-// --- Settings Modal ---
+// --- Claude Commands Menu ---
 
-async function openSettings() {
-  const config = await window.api.getSettings();
-  settingsBaseUrl.value = config.baseUrl || '';
-  settingsApiKey.value = config.apiKey || '';
-  settingsModal.classList.remove('hidden');
-  settingsBaseUrl.focus();
+function toggleClaudeCommandsMenu() {
+  claudeCommandsMenu.classList.toggle('hidden');
 }
 
-function closeSettings() {
-  settingsModal.classList.add('hidden');
-}
-
-async function saveSettings() {
-  const baseUrl = settingsBaseUrl.value.trim();
-  const apiKey = settingsApiKey.value.trim();
-  if (apiKey) {
-    await window.api.saveSettings(apiKey, baseUrl);
-    closeSettings();
+function executeClaudeCommand(command) {
+  console.log('Executing Claude command:', command);
+  if (activeTabId) {
+    // Send command with newline to execute immediately
+    window.api.sendTerminalData(activeTabId, command + '\r');
+    // Focus terminal after sending command
+    setTimeout(() => {
+      terminalManager.focus(activeTabId);
+    }, 100);
+    // Close menu after execution
+    claudeCommandsMenu.classList.add('hidden');
+  } else {
+    console.warn('No active tab to execute command');
   }
 }
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.claude-commands-wrapper')) {
+    claudeCommandsMenu.classList.add('hidden');
+  }
+});
 
 // --- IPC Listeners ---
 
@@ -433,10 +435,21 @@ btnAddTerminal.addEventListener('click', () => createNewTab());
 btnAddClaude.addEventListener('click', () => createNewTab('claude'));
 btnRefresh.addEventListener('click', () => refreshAllTopics());
 btnCopyLogs.addEventListener('click', () => copyLogsToClipboard());
+btnClaudeCommands.addEventListener('click', (e) => {
+  e.stopPropagation();
+  toggleClaudeCommandsMenu();
+});
 btnTheme.addEventListener('click', () => toggleTheme());
-btnSettings.addEventListener('click', () => openSettings());
-btnSettingsSave.addEventListener('click', () => saveSettings());
-btnSettingsCancel.addEventListener('click', () => closeSettings());
+
+// Claude commands menu items
+document.querySelectorAll('.commands-menu-item').forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const command = item.dataset.command;
+    executeClaudeCommand(command);
+  });
+});
+
 btnScrollBottom.addEventListener('click', () => {
   console.log('Scroll to bottom clicked');
   if (activeTabId) {

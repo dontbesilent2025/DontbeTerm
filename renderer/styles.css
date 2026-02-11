@@ -98,6 +98,8 @@ body {
   gap: var(--space-sm);
   flex-shrink: 0;
   -webkit-app-region: drag; /* Make toolbar draggable */
+  position: relative;
+  z-index: 10000;
 }
 
 #toolbar-spacer {
@@ -126,6 +128,104 @@ body {
 
 #toolbar button:active {
   transform: scale(0.98);
+}
+
+/* Claude Commands Dropdown */
+.claude-commands-wrapper {
+  position: relative;
+  -webkit-app-region: no-drag;
+  z-index: 10001;
+}
+
+#btn-claude-commands {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.commands-menu {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  left: 0;
+  min-width: 180px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-xs);
+  z-index: 99999;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  animation: fadeInDown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.commands-menu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.commands-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.commands-menu::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.commands-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+.commands-menu.hidden {
+  display: none;
+}
+
+.commands-menu-item {
+  padding: var(--space-sm) var(--space-md);
+  font-size: 13px;
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.command-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+}
+
+.command-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.commands-menu-item:hover {
+  background: var(--hover);
+}
+
+.commands-menu-item:active {
+  background: var(--active);
+  transform: scale(0.98);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Tab Bar - macOS Style */

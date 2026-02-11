@@ -29,10 +29,6 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('topic:status', (event, payload) => callback(payload));
   },
 
-  // Settings
-  getSettings: () => ipcRenderer.invoke('settings:get'),
-  saveSettings: (apiKey, baseUrl) => ipcRenderer.invoke('settings:save', { apiKey, baseUrl }),
-
   // Shortcuts (main -> renderer)
   onNewTab: (callback) => {
     ipcRenderer.on('shortcut:new-tab', () => callback());
