@@ -5,7 +5,6 @@ node_modules/
 dist/
 release/
 build/
-lib/
 
 # macOS
 .DS_Store
@@ -21,6 +20,9 @@ npm-debug.log*
 # Environment variables
 .env
 .env.local
+
+# User configuration (contains API keys)
+config.json
 
 # Claude Code
 .claude/
