@@ -1,5 +1,29 @@
 # DontbeTerm 安装指南
 
+## 快速安装
+
+### 一键安装脚本（最简单）
+
+在终端执行以下命令：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/dontbesilent2025/DontbeTerm/main/install.sh | bash
+```
+
+**这个脚本会自动：**
+- ✅ 检测你的系统架构（Apple Silicon 或 Intel）
+- ✅ 下载最新版本
+- ✅ 安装到应用程序文件夹
+- ✅ 移除隔离属性
+- ✅ 清理临时文件
+
+**安全说明：**
+- 脚本是开源的，可以在 GitHub 上查看源代码
+- 使用 HTTPS 下载，确保安全
+- 只需要标准的系统权限
+
+---
+
 ## macOS 安装
 
 ### 方法一：使用安装助手（最简单，推荐）

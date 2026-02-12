@@ -29,7 +29,30 @@ DontbeTerm 让你同时运行多个 Claude Code 会话，并通过 AI 自动识�
 
 ## 安装
 
-### macOS
+### 一键安装（推荐）
+
+在终端执行以下命令：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/dontbesilent2025/DontbeTerm/main/install.sh | bash
+```
+
+脚本会自动：
+- 检测系统架构（Apple Silicon 或 Intel）
+- 下载最新版本
+- 安装到应用程序文件夹
+- 移除隔离属性
+
+### Homebrew 安装（即将支持）
+
+```bash
+# 即将支持
+brew install --cask dontbeterm
+```
+
+### 手动安装
+
+#### macOS
 
 1. 下载对应的 DMG 文件
 2. 打开 DMG，**双击"安装 DontbeTerm.command"**
