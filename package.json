@@ -12,6 +12,7 @@
     "dist:all": "electron-builder --mac --win --config.npmRebuild=false"
   },
   "dependencies": {
+    "electron-updater": "^6.7.3",
     "node-pty": "^1.0.0",
     "xterm": "^5.3.0",
     "xterm-addon-fit": "^0.8.0"
@@ -29,7 +30,10 @@
       "target": [
         {
           "target": "dmg",
-          "arch": ["x64", "arm64"]
+          "arch": [
+            "x64",
+            "arm64"
+          ]
         }
       ],
       "icon": "build/icon.icns",
@@ -61,7 +65,9 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "build/icon.ico",
@@ -82,6 +88,11 @@
     ],
     "extraMetadata": {
       "main": "main.js"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "dontbesilent2025",
+      "repo": "DontbeTerm"
     }
   }
 }

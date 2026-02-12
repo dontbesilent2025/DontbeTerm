@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const pty = require('node-pty');
 const topicDetector = require('./lib/topic-detector');
@@ -7,6 +8,10 @@ const claudeCliChecker = require('./lib/claude-cli-checker');
 let win;
 const terminals = new Map();
 let claudeCliStatus = null;
+
+// 配置自动更新
+autoUpdater.autoDownload = false; // 不自动下载，让用户选择
+autoUpdater.autoInstallOnAppQuit = true;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -161,6 +166,89 @@ ipcMain.handle('claude-cli:setup-guide', () => {
   return claudeCliChecker.getSetupGuide();
 });
 
+// --- Auto Updater ---
+
+// 自动更新事件
+autoUpdater.on('checking-for-update', () => {
+  console.log('[AutoUpdater] Checking for update...');
+  if (win && !win.isDestroyed()) {
+    win.webContents.send('update:checking');
+  }
+});
+
+autoUpdater.on('update-available', (info) => {
+  console.log('[AutoUpdater] Update available:', info.version);
+  if (win && !win.isDestroyed()) {
+    win.webContents.send('update:available', {
+      version: info.version,
+      releaseNotes: info.releaseNotes,
+      releaseDate: info.releaseDate
+    });
+  }
+});
+
+autoUpdater.on('update-not-available', (info) => {
+  console.log('[AutoUpdater] Update not available');
+  if (win && !win.isDestroyed()) {
+    win.webContents.send('update:not-available', { version: info.version });
+  }
+});
+
+autoUpdater.on('error', (err) => {
+  console.error('[AutoUpdater] Error:', err);
+  if (win && !win.isDestroyed()) {
+    win.webContents.send('update:error', { message: err.message });
+  }
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+  console.log(`[AutoUpdater] Download progress: ${progressObj.percent}%`);
+  if (win && !win.isDestroyed()) {
+    win.webContents.send('update:download-progress', {
+      percent: progressObj.percent,
+      transferred: progressObj.transferred,
+      total: progressObj.total
+    });
+  }
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+  console.log('[AutoUpdater] Update downloaded');
+  if (win && !win.isDestroyed()) {
+    win.webContents.send('update:downloaded', { version: info.version });
+  }
+});
+
+// IPC 处理器
+ipcMain.handle('update:check', async () => {
+  try {
+    const result = await autoUpdater.checkForUpdates();
+    return { success: true, updateInfo: result.updateInfo };
+  } catch (err) {
+    console.error('[AutoUpdater] Check failed:', err);
+    return { success: false, error: err.message };
+  }
+});
+
+ipcMain.handle('update:download', async () => {
+  try {
+    await autoUpdater.downloadUpdate();
+    return { success: true };
+  } catch (err) {
+    console.error('[AutoUpdater] Download failed:', err);
+    return { success: false, error: err.message };
+  }
+});
+
+ipcMain.handle('update:install', () => {
+  autoUpdater.quitAndInstall(false, true);
+  return { success: true };
+});
+
+ipcMain.handle('update:get-version', () => {
+  return { version: app.getVersion() };
+});
+
 // --- IPC: Topic detection ---
 
 ipcMain.handle('topic:refresh', async () => {
@@ -313,6 +401,14 @@ app.whenReady().then(async () => {
   }
 
   createWindow();
+
+  // 启动后 3 秒检查更新
+  setTimeout(() => {
+    console.log('[Main] Checking for updates...');
+    autoUpdater.checkForUpdates().catch(err => {
+      console.error('[Main] Update check failed:', err);
+    });
+  }, 3000);
 });
 
 app.on('window-all-closed', () => {

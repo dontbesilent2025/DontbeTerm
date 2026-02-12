@@ -145,6 +145,95 @@ function showSetupGuide(guide) {
   alert(message);
 }
 
+// --- Auto Updater ---
+
+let updateInfo = null;
+let isDownloading = false;
+
+function setupAutoUpdater() {
+  console.log('[App] Setting up auto updater...');
+
+  // 监听更新检查
+  window.api.onUpdateChecking(() => {
+    console.log('[App] Checking for updates...');
+  });
+
+  // 监听发现新版本
+  window.api.onUpdateAvailable((info) => {
+    console.log('[App] Update available:', info.version);
+    updateInfo = info;
+    showUpdateNotification(info);
+  });
+
+  // 监听没有更新
+  window.api.onUpdateNotAvailable((info) => {
+    console.log('[App] No update available, current version:', info.version);
+  });
+
+  // 监听更新错误
+  window.api.onUpdateError((error) => {
+    console.error('[App] Update error:', error.message);
+    if (isDownloading) {
+      alert(`更新失败\n\n${error.message}`);
+      isDownloading = false;
+    }
+  });
+
+  // 监听下载进度
+  window.api.onUpdateDownloadProgress((progress) => {
+    console.log(`[App] Download progress: ${progress.percent.toFixed(1)}%`);
+    updateDownloadProgress(progress);
+  });
+
+  // 监听下载完成
+  window.api.onUpdateDownloaded((info) => {
+    console.log('[App] Update downloaded:', info.version);
+    isDownloading = false;
+    showInstallPrompt(info);
+  });
+}
+
+function showUpdateNotification(info) {
+  const message = `发现新版本 v${info.version}\n\n是否立即下载更新？`;
+  if (confirm(message)) {
+    downloadUpdate();
+  }
+}
+
+async function downloadUpdate() {
+  console.log('[App] Starting update download...');
+  isDownloading = true;
+
+  try {
+    const result = await window.api.downloadUpdate();
+    if (!result.success) {
+      alert(`下载失败\n\n${result.error}`);
+      isDownloading = false;
+    }
+  } catch (err) {
+    console.error('[App] Download failed:', err);
+    alert(`下载失败\n\n${err.message}`);
+    isDownloading = false;
+  }
+}
+
+function updateDownloadProgress(progress) {
+  const percent = progress.percent.toFixed(1);
+  const transferred = (progress.transferred / 1024 / 1024).toFixed(1);
+  const total = (progress.total / 1024 / 1024).toFixed(1);
+  console.log(`[App] 下载进度: ${percent}% (${transferred}MB / ${total}MB)`);
+  // 可以在这里更新 UI 显示下载进度
+}
+
+function showInstallPrompt(info) {
+  const message = `新版本 v${info.version} 已下载完成\n\n是否立即重启并安装？`;
+  if (confirm(message)) {
+    window.api.installUpdate();
+  } else {
+    alert('更新将在下次启动时自动安装');
+  }
+}
+
 // --- Tab Management ---
 
 function generateTabId() {
@@ -571,5 +660,8 @@ initTheme();
 
 // Check Claude CLI status on startup
 updateClaudeCliStatus();
+
+// 设置自动更新监听器
+setupAutoUpdater();
 
 createNewTab('claude');

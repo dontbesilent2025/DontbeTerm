@@ -35,6 +35,30 @@ contextBridge.exposeInMainWorld('api', {
   testClaudeCli: () => ipcRenderer.invoke('claude-cli:test'),
   getSetupGuide: () => ipcRenderer.invoke('claude-cli:setup-guide'),
 
+  // Auto updater
+  checkForUpdates: () => ipcRenderer.invoke('update:check'),
+  downloadUpdate: () => ipcRenderer.invoke('update:download'),
+  installUpdate: () => ipcRenderer.invoke('update:install'),
+  getCurrentVersion: () => ipcRenderer.invoke('update:get-version'),
+  onUpdateChecking: (callback) => {
+    ipcRenderer.on('update:checking', () => callback());
+  },
+  onUpdateAvailable: (callback) => {
+    ipcRenderer.on('update:available', (event, payload) => callback(payload));
+  },
+  onUpdateNotAvailable: (callback) => {
+    ipcRenderer.on('update:not-available', (event, payload) => callback(payload));
+  },
+  onUpdateError: (callback) => {
+    ipcRenderer.on('update:error', (event, payload) => callback(payload));
+  },
+  onUpdateDownloadProgress: (callback) => {
+    ipcRenderer.on('update:download-progress', (event, payload) => callback(payload));
+  },
+  onUpdateDownloaded: (callback) => {
+    ipcRenderer.on('update:downloaded', (event, payload) => callback(payload));
+  },
+
   // Shortcuts (main -> renderer)
   onNewTab: (callback) => {
     ipcRenderer.on('shortcut:new-tab', () => callback());
