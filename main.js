@@ -2,9 +2,11 @@ const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
 const path = require('path');
 const pty = require('node-pty');
 const topicDetector = require('./lib/topic-detector');
+const claudeCliChecker = require('./lib/claude-cli-checker');
 
 let win;
 const terminals = new Map();
+let claudeCliStatus = null;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -136,6 +138,27 @@ ipcMain.handle('terminal:close', (event, { tabId }) => {
     terminals.delete(tabId);
   }
   return { tabId };
+});
+
+// --- IPC: Claude CLI status ---
+
+ipcMain.handle('claude-cli:check', async () => {
+  console.log('[Main] Claude CLI check requested');
+  claudeCliStatus = await claudeCliChecker.checkClaudeCli();
+  return claudeCliStatus;
+});
+
+ipcMain.handle('claude-cli:status', () => {
+  return claudeCliStatus || claudeCliChecker.getClaudeCliStatus();
+});
+
+ipcMain.handle('claude-cli:test', async () => {
+  console.log('[Main] Claude CLI test requested');
+  return await claudeCliChecker.testClaudeCli();
+});
+
+ipcMain.handle('claude-cli:setup-guide', () => {
+  return claudeCliChecker.getSetupGuide();
 });
 
 // --- IPC: Topic detection ---
@@ -277,7 +300,20 @@ function buildMenu() {
 
 // --- App lifecycle ---
 
-app.whenReady().then(createWindow);
+app.whenReady().then(async () => {
+  // Check Claude CLI availability on startup
+  console.log('[Main] Checking Claude CLI availability...');
+  claudeCliStatus = await claudeCliChecker.checkClaudeCli();
+
+  if (claudeCliStatus.available) {
+    console.log('[Main] Claude CLI is available:', claudeCliStatus.version);
+  } else {
+    console.warn('[Main] Claude CLI not available:', claudeCliStatus.error);
+    console.warn('[Main] Topic detection will use fallback naming');
+  }
+
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   for (const [, entry] of terminals) {

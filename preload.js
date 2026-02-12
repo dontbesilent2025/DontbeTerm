@@ -29,6 +29,12 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('topic:status', (event, payload) => callback(payload));
   },
 
+  // Claude CLI status
+  checkClaudeCli: () => ipcRenderer.invoke('claude-cli:check'),
+  getClaudeCliStatus: () => ipcRenderer.invoke('claude-cli:status'),
+  testClaudeCli: () => ipcRenderer.invoke('claude-cli:test'),
+  getSetupGuide: () => ipcRenderer.invoke('claude-cli:setup-guide'),
+
   // Shortcuts (main -> renderer)
   onNewTab: (callback) => {
     ipcRenderer.on('shortcut:new-tab', () => callback());

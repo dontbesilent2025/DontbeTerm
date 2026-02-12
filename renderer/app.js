@@ -81,6 +81,69 @@ const claudeCommandsMenu = document.getElementById('claude-commands-menu');
 const btnScrollToBottom = document.getElementById('btn-scroll-to-bottom');
 const btnTheme = document.getElementById('btn-theme');
 const btnScrollBottom = document.getElementById('btn-scroll-bottom');
+const claudeCliStatus = document.getElementById('claude-cli-status');
+
+// --- Claude CLI Status Management ---
+
+async function updateClaudeCliStatus() {
+  console.log('[App] Checking Claude CLI status...');
+  const statusDot = claudeCliStatus.querySelector('.status-dot');
+  const statusText = claudeCliStatus.querySelector('.status-text');
+
+  try {
+    const status = await window.api.getClaudeCliStatus();
+    console.log('[App] Claude CLI status:', status);
+
+    // Remove all status classes
+    claudeCliStatus.classList.remove('available', 'unavailable', 'error');
+
+    if (status.available) {
+      claudeCliStatus.classList.add('available');
+      statusText.textContent = 'Claude CLI 可用';
+      claudeCliStatus.title = `Claude CLI 已安装\n版本: ${status.version || '未知'}`;
+    } else {
+      claudeCliStatus.classList.add('unavailable');
+      statusText.textContent = 'Claude CLI 不可用';
+      claudeCliStatus.title = `Claude CLI 未安装或不可用\n${status.error || ''}\n\n点击查看配置指南`;
+    }
+  } catch (err) {
+    console.error('[App] Failed to get Claude CLI status:', err);
+    claudeCliStatus.classList.remove('available', 'unavailable');
+    claudeCliStatus.classList.add('error');
+    statusText.textContent = 'Claude CLI 检查失败';
+    claudeCliStatus.title = '无法检查 Claude CLI 状态';
+  }
+}
+
+// Show setup guide when clicking on unavailable status
+claudeCliStatus.addEventListener('click', async () => {
+  const status = await window.api.getClaudeCliStatus();
+  if (!status.available) {
+    const guide = await window.api.getSetupGuide();
+    showSetupGuide(guide);
+  } else {
+    // If available, run a test
+    console.log('[App] Testing Claude CLI...');
+    const testResult = await window.api.testClaudeCli();
+    if (testResult.success) {
+      alert('Claude CLI 测试成功！\n\n输出: ' + testResult.output);
+    } else {
+      alert('Claude CLI 测试失败\n\n错误: ' + testResult.error);
+    }
+  }
+});
+
+function showSetupGuide(guide) {
+  let message = `${guide.title}\n\n`;
+  guide.steps.forEach(step => {
+    message += `${step.step}. ${step.title}\n   ${step.description}\n\n`;
+  });
+  message += '\n常见问题:\n';
+  guide.troubleshooting.forEach(item => {
+    message += `\n问题: ${item.problem}\n解决: ${item.solution}\n`;
+  });
+  alert(message);
+}
 
 // --- Tab Management ---
 
@@ -505,5 +568,8 @@ setInterval(() => {
 
 // Initialize theme based on system preference
 initTheme();
+
+// Check Claude CLI status on startup
+updateClaudeCliStatus();
 
 createNewTab('claude');

@@ -130,6 +130,53 @@ body {
   transform: scale(0.98);
 }
 
+/* Claude CLI Status Indicator */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 var(--space-md);
+  height: 28px;
+  background: var(--hover);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-app-region: no-drag;
+}
+
+.status-indicator:hover {
+  background: var(--active);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  transition: background 0.3s ease;
+}
+
+.status-indicator.available .status-dot {
+  background: var(--success);
+  box-shadow: 0 0 8px rgba(52, 199, 89, 0.5);
+}
+
+.status-indicator.unavailable .status-dot {
+  background: var(--warning);
+}
+
+.status-indicator.error .status-dot {
+  background: var(--danger);
+}
+
+.status-text {
+  font-size: 12px;
+  font-weight: 500;
+}
+
 /* Claude Commands Dropdown */
 .claude-commands-wrapper {
   position: relative;
