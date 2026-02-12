@@ -141,13 +141,16 @@ ipcMain.handle('terminal:close', (event, { tabId }) => {
 // --- IPC: Topic detection ---
 
 ipcMain.handle('topic:refresh', async () => {
+  console.log('[Main] Topic refresh requested');
   const tabBuffers = [];
   for (const [tabId, entry] of terminals) {
     tabBuffers.push({ tabId, buffer: entry.buffer });
   }
+  console.log('[Main] Processing', tabBuffers.length, 'tabs');
 
   try {
     const results = await topicDetector.detectTopics(tabBuffers);
+    console.log('[Main] Topic detection completed:', results);
     for (const { tabId, topic } of results) {
       if (win && !win.isDestroyed()) {
         win.webContents.send('topic:status', {
@@ -157,6 +160,7 @@ ipcMain.handle('topic:refresh', async () => {
     }
     return { success: true };
   } catch (err) {
+    console.error('[Main] Topic detection error:', err);
     for (const { tabId } of tabBuffers) {
       if (win && !win.isDestroyed()) {
         win.webContents.send('topic:status', {
