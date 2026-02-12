@@ -2,7 +2,33 @@
   <img src="icon.png" alt="DontbeTerm Icon" width="128" height="128">
   <h1>DontbeTerm</h1>
   <p>多标签终端管理器，专为 Claude Code 设计，支持 AI 智能标签命名。</p>
+
+  <br>
+
+  <h3>🚀 一键安装</h3>
+
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/dontbesilent2025/DontbeTerm/main/install.sh | bash
+  ```
+
+  <p><sub>支持 macOS (Apple Silicon & Intel) | 自动检测架构 | 自动安装配置</sub></p>
+
+  <br>
+
+  <p>
+    <a href="https://github.com/dontbesilent2025/DontbeTerm/releases/latest">
+      <img src="https://img.shields.io/github/v/release/dontbesilent2025/DontbeTerm?style=flat-square" alt="Latest Release">
+    </a>
+    <a href="https://github.com/dontbesilent2025/DontbeTerm/releases">
+      <img src="https://img.shields.io/github/downloads/dontbesilent2025/DontbeTerm/total?style=flat-square" alt="Downloads">
+    </a>
+    <a href="https://github.com/dontbesilent2025/DontbeTerm/blob/main/LICENSE">
+      <img src="https://img.shields.io/github/license/dontbesilent2025/DontbeTerm?style=flat-square" alt="License">
+    </a>
+  </p>
 </div>
+
+---
 
 DontbeTerm 让你同时运行多个 Claude Code 会话，并通过 AI 自动识别每个对话的主题来命名标签页。
 
