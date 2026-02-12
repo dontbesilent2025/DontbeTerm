@@ -2,13 +2,29 @@
 
 ## macOS 安装
 
-### 方法一：使用安装脚本（推荐）
+### 方法一：使用安装助手（最简单，推荐）
 
 1. 下载对应的 DMG 文件：
    - Apple Silicon (M1/M2/M3): `DontbeTerm-x.x.x-arm64.dmg`
    - Intel: `DontbeTerm-x.x.x-x64.dmg`
 
-2. 打开 DMG 文件，将 DontbeTerm.app 拖到应用程序文件夹
+2. 打开 DMG 文件，你会看到三个项目：
+   - DontbeTerm.app（应用程序）
+   - Applications（应用程序文件夹快捷方式）
+   - **安装 DontbeTerm.command**（安装助手）
+
+3. **双击"安装 DontbeTerm.command"**
+   - 脚本会自动将应用复制到应用程序文件夹
+   - 自动移除隔离属性
+   - 询问是否立即打开应用
+
+4. 完成！现在可以正常使用了
+
+### 方法二：手动安装
+
+1. 下载并打开 DMG 文件
+
+2. 将 DontbeTerm.app 拖到应用程序文件夹
 
 3. 打开终端，执行以下命令：
    ```bash
@@ -16,8 +32,6 @@
    ```
 
 4. 现在可以正常打开应用了
-
-### 方法二：通过系统设置允许
 
 1. 下载并安装 DMG 文件
 

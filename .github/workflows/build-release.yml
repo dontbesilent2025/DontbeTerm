@@ -110,12 +110,16 @@ jobs:
 
             ### 📖 安装说明
 
-            #### macOS 用户
-            下载 DMG 文件后，将应用拖到应用程序文件夹，然后在终端执行：
+            #### macOS 用户（推荐方法）
+            1. 下载 DMG 文件
+            2. 打开 DMG，**双击"安装 DontbeTerm.command"**
+            3. 安装助手会自动完成所有步骤（复制应用、移除隔离属性）
+            4. 完成！
+
+            **手动方法**：将应用拖到应用程序文件夹，然后在终端执行：
             ```bash
             xattr -cr /Applications/DontbeTerm.app
             ```
-            这会移除隔离属性，允许应用运行。
 
             #### Windows 用户
             - **安装版**：双击 Setup.exe，如果提示 SmartScreen 警告，点击"更多信息" > "仍要运行"

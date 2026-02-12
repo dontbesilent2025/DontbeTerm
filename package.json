@@ -35,6 +35,28 @@
       "icon": "build/icon.icns",
       "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 270,
+          "y": 380,
+          "type": "file",
+          "path": "build/安装 DontbeTerm.command"
+        }
+      ],
+      "title": "安装 ${productName}",
+      "background": null
+    },
     "win": {
       "target": [
         {

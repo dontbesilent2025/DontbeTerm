@@ -32,12 +32,14 @@ DontbeTerm 让你同时运行多个 Claude Code 会话，并通过 AI 自动识�
 ### macOS
 
 1. 下载对应的 DMG 文件
-2. 打开 DMG，将应用拖到应用程序文件夹
-3. 在终端执行：
-   ```bash
-   xattr -cr /Applications/DontbeTerm.app
-   ```
-   或者下载并运行 [install-macos.sh](install-macos.sh) 脚本
+2. 打开 DMG，**双击"安装 DontbeTerm.command"**
+3. 安装助手会自动完成所有步骤
+4. 完成！
+
+**手动安装**：如果你更喜欢手动操作，可以将应用拖到应用程序文件夹，然后在终端执行：
+```bash
+xattr -cr /Applications/DontbeTerm.app
+```
 
 **详细说明**：查看 [INSTALLATION.md](INSTALLATION.md)
 
